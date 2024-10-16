@@ -6,20 +6,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 public class AccountingLedgerApp {
 
     public final static String dataFileName = "transactions.csv";
     public static ArrayList<Transactions> transactions = getTransactions();
+//    public static LocalDateTime now = LocalDateTime.now();
 
     public static void main(String[] args) {
 
-//        accountingLedgerHomeScreen();
-        displayLedgerAllEntries();
+        accountingLedgerHomeScreen();
+//        displayLedgerAllEntries();
 
     }
 
@@ -111,7 +115,6 @@ public class AccountingLedgerApp {
                     case "l":
                         displayLedgerMenu();
                         break;
-                    // todo FIX THIS ERROR
                     case "E":
                     case "e":
                         return;
@@ -208,8 +211,8 @@ public class AccountingLedgerApp {
                         break;
                     case "H":
                     case "h":
-                        accountingLedgerHomeScreen();
-                        break;
+
+                       return;
                     default:
                         System.out.println("Invalid Letter, please try again.");
 
@@ -222,19 +225,45 @@ public class AccountingLedgerApp {
 
     // * A (From ledger screen --> Verify which user, then display All entries)
     public static void displayLedgerAllEntries(){
-        System.out.println("Display All Entries");
-
-
+        System.out.println("All Entries Are Being Displayed: ");
+        for (int i = 0; i < transactions.size(); i++){
+        // todo how to reverse it by date
+      //for (int i = transactions.size() -1 ; i >= 0; i--){
+        Transactions t = transactions.get(i);
+        System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+        }
     }
 
     // * D (From ledger screen --> Verify which user, then display only positive or "Deposit" entries)
     public static void displayLedgerDeposits(){
-        System.out.println("Display Ledger Deposits, positive values");
+        System.out.println("Ledger Deposits Are Being Displayed: ");
+        // todo how to reverse it by date
+        //for (int i = transactions.size() -1 ; i >= 0; i--){
+        for (int i = 0; i < transactions.size(); i++){
+            Transactions t = transactions.get(i);
+            if (t.getAmount() > 0){
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+//            else if (t.getAmount() == 0){
+//                System.out.println("Deposits of $0 Made!");
+//                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+//            }
+        }
     }
 
     // * P (From ledger screen --> Verify which user, then display only negative or "Payment" entries)
     public static void displayLedgerPayments(){
-        System.out.println("Display Ledger Payments, negative values");
+        System.out.println("Ledger Payments Are Being Displayed: ");
+        for (int i = 0; i < transactions.size(); i++){
+            Transactions t = transactions.get(i);
+            if (t.getAmount() < 0){
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+//            if (t.getAmount() == 0){
+//                System.out.println("Payments of $0 Made!");
+//                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+//            }
+        }
     }
 
 
@@ -297,27 +326,63 @@ public class AccountingLedgerApp {
 
     // * 1 (Month to Date)
     public static void displayMonthToDate(){
-        System.out.println("display month to date");
+        System.out.println("Displaying Beginning of Current Month to Current Date: ");
+
+        for (int i = 0; i < transactions.size(); i++) {
+            Transactions t = transactions.get(i);
+            if (t.getDate().getMonth() == LocalDate.now().getMonth() && t.getDate().getYear() == LocalDate.now().getYear()) {
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+        }
     }
 
     // * 2 (Previous Month)
     public static void displayPreviousMonth(){
-        System.out.println("display previous month");
+        System.out.println("Displaying Previous Month: ");
+
+        for (int i = 0; i < transactions.size(); i++) {
+            Transactions t = transactions.get(i);
+            if (t.getDate().getMonthValue() == LocalDate.now().getMonthValue()-1) {
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+        }
+
     }
 
     // * 3 (Year to Date)
     public static void displayYearToDate(){
-        System.out.println("display year to date");
+        System.out.println("Displaying Beginning of Current Year to Current Date: ");
+
+        for (int i = 0; i < transactions.size(); i++) {
+            Transactions t = transactions.get(i);
+            if (t.getDate().getYear() == LocalDate.now().getYear()) {
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+        }
     }
 
     // * 4 (Previous Year)
     public static void displayPreviousYear(){
-        System.out.println("display previous year");
+        System.out.println("Displaying Previous Year: ");
+
+        for (int i = 0; i < transactions.size(); i++) {
+            Transactions t = transactions.get(i);
+            if (t.getDate().getYear() == LocalDate.now().getYear()-1) {
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+        }
     }
 
     // * 5 (Search by Vendor)
     public static void displaySearchByVendor(){
-        System.out.println("display search by vendor");
+        String vendor = Console.PromptForString("Search By Vendor: ");
+
+        for (int i = 0; i < transactions.size(); i++) {
+            Transactions t = transactions.get(i);
+            if (t.getVendor().equalsIgnoreCase(vendor)) {
+                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+            }
+        }
     }
 
 
