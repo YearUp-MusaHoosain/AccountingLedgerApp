@@ -2,13 +2,81 @@ package com.pluralsight;
 
 // 1:23:16
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 public class AccountingLedgerApp {
+
+    public final static String dataFileName = "transactions.csv";
+    public static ArrayList<Transactions> transactions = getTransactions();
 
     public static void main(String[] args) {
 
-        accountingLedgerHomeScreen();
+//        accountingLedgerHomeScreen();
+        displayLedgerAllEntries();
 
     }
+
+    // This Method gets all the transactions from the transactions.csv
+    public static ArrayList<Transactions> getTransactions(){
+        ArrayList<Transactions> transactions = new ArrayList<Transactions>();
+        try{
+            FileReader fr = new FileReader(dataFileName);
+            BufferedReader br = new BufferedReader(fr);
+
+            br.readLine();
+
+            String input;
+            while( (input = br.readLine()) != null){
+                String[] tokens = input.split(Pattern.quote("|"));
+                LocalDate transactionDate = LocalDate.parse(tokens[0]);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+                LocalTime transactionTime = LocalTime.parse(tokens[1], formatter);
+                String transactionDescription = tokens[2];
+                String transactionVendor = tokens[3];
+                double transactionAmount = Double.parseDouble(tokens[4]);
+                Transactions t = new Transactions(transactionDate, transactionTime, transactionDescription, transactionVendor, transactionAmount);
+                transactions.add(t);
+            }
+            br.close();
+        }
+        catch (Exception e){
+            System.out.println("ERROR!!");
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
+    // This Method writes transactions (and info) to the transactions.csv
+    public static void saveTransactions(){
+
+        try{
+            FileWriter fw = new FileWriter(dataFileName);
+
+            fw.write("date|time|description|vendor|amount \n");
+
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+            for(Transactions t : transactions){
+                String formattedTime = t.getTime().format(timeFormatter);
+                String data = t.getDate() + "|" + formattedTime + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount() + "\n";
+                fw.write(data);
+            }
+
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("FILE WRITE ERROR");
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     /**
@@ -43,6 +111,7 @@ public class AccountingLedgerApp {
                     case "l":
                         displayLedgerMenu();
                         break;
+                    // todo FIX THIS ERROR
                     case "E":
                     case "e":
                         return;
@@ -62,7 +131,17 @@ public class AccountingLedgerApp {
      * Gives option to go back to home screen or exit.
      */
     public static void addDeposit(){
-        System.out.println("Add Deposit");
+        String depositDescription = Console.PromptForString("Enter description of the deposit: ");
+        String depositVendor = Console.PromptForString("Enter the name of the vendor: ");
+        double depositAmount = Console.PromptForDouble("Enter the amount you want to deposit:  ");
+        LocalDate depositDate = LocalDate.now();
+        LocalTime depositTime = LocalTime.now();
+
+
+        Transactions t = new Transactions(depositDate, depositTime,
+                depositDescription, depositVendor, depositAmount);
+        transactions.add(t);
+        saveTransactions();
 
     }
 
@@ -71,7 +150,18 @@ public class AccountingLedgerApp {
      * Gives option to go back to home screen or exit.
      */
     public static void makePayment(){
-        System.out.println("Make Payment");
+        String paymentDescription = Console.PromptForString("Enter description of the payment: ");
+        String paymentVendor = Console.PromptForString("Enter the name of the vendor: ");
+        double paymentAmount = Console.PromptForDouble("Enter the amount you want to pay:  ");
+        LocalDate paymentDate = LocalDate.now();
+        LocalTime paymentTime = LocalTime.now();
+
+        paymentAmount = paymentAmount * -1;
+
+        Transactions t = new Transactions(paymentDate, paymentTime,
+                paymentDescription, paymentVendor, paymentAmount);
+        transactions.add(t);
+        saveTransactions();
     }
 
 
@@ -133,6 +223,8 @@ public class AccountingLedgerApp {
     // * A (From ledger screen --> Verify which user, then display All entries)
     public static void displayLedgerAllEntries(){
         System.out.println("Display All Entries");
+
+
     }
 
     // * D (From ledger screen --> Verify which user, then display only positive or "Deposit" entries)
