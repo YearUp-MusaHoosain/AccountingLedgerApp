@@ -6,9 +6,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 public class AccountingLedgerApp {
@@ -228,6 +232,7 @@ public class AccountingLedgerApp {
         // todo how to reverse it by date
       //for (int i = transactions.size() -1 ; i >= 0; i--){
         Transactions t = transactions.get(i);
+            Collections.sort();
         System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
         }
     }
