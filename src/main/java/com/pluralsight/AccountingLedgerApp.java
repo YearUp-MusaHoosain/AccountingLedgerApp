@@ -6,24 +6,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.regex.Pattern;
 
 public class AccountingLedgerApp {
 
     public final static String dataFileName = "transactions.csv";
     public static ArrayList<Transactions> transactions = getTransactions();
-//    public static LocalDateTime now = LocalDateTime.now();
+
 
     public static void main(String[] args) {
 
         accountingLedgerHomeScreen();
-//        displayLedgerAllEntries();
 
     }
 
@@ -58,7 +54,7 @@ public class AccountingLedgerApp {
     }
 
     // This Method writes transactions (and info) to the transactions.csv
-    public static void saveTransactions(){
+    public static void writeTransactions(){
 
         try{
             FileWriter fw = new FileWriter(dataFileName);
@@ -130,8 +126,10 @@ public class AccountingLedgerApp {
     }
 
     /**
-     * From home screen --> Method to add a deposit. (prompt the user for deposit information and save it to transactions.csv)
+     * From home screen --> Method to add a deposit.
      * Gives option to go back to home screen or exit.
+     *
+     * (prompt the user for deposit information and save it to transactions.csv)
      */
     public static void addDeposit(){
         String depositDescription = Console.PromptForString("Enter description of the deposit: ");
@@ -144,13 +142,15 @@ public class AccountingLedgerApp {
         Transactions t = new Transactions(depositDate, depositTime,
                 depositDescription, depositVendor, depositAmount);
         transactions.add(t);
-        saveTransactions();
+        writeTransactions();
 
     }
 
     /**
-     * From home screen --> Method to make a payment. (prompt the user for debit information and save it to transactions.csv)
+     * From home screen --> Method to make a payment.
      * Gives option to go back to home screen or exit.
+     *
+     * (prompt the user for debit information and save it to transactions.csv)
      */
     public static void makePayment(){
         String paymentDescription = Console.PromptForString("Enter description of the payment: ");
@@ -164,17 +164,17 @@ public class AccountingLedgerApp {
         Transactions t = new Transactions(paymentDate, paymentTime,
                 paymentDescription, paymentVendor, paymentAmount);
         transactions.add(t);
-        saveTransactions();
+        writeTransactions();
     }
 
 
     /**
      * From home screen --> second level menu - the ledger screen. User can select a few options:
-     * A (From ledger screen --> Verify which user, then display All entries)
-     * D (From ledger screen --> Verify which user, then display only positive or "Deposit" entries)
-     * P (From ledger screen --> Verify which user, then display only negative or "Payment" entries)
+     * A (From ledger screen --> display All entries)
+     * D (From ledger screen --> display only positive or "Deposit" entries)
+     * P (From ledger screen --> display only negative or "Payment" entries)
      * R (From ledger screen --> third level menu - the "reports" screen. Users can run predefined reports or custom vendor search)
-     * H (return to Home screen)
+     * H (From ledger screen --> return to Home screen)
      */
     public static void displayLedgerMenu(){
         do {
@@ -211,7 +211,6 @@ public class AccountingLedgerApp {
                         break;
                     case "H":
                     case "h":
-
                        return;
                     default:
                         System.out.println("Invalid Letter, please try again.");
@@ -223,7 +222,7 @@ public class AccountingLedgerApp {
         } while(true);
     }
 
-    // * A (From ledger screen --> Verify which user, then display All entries)
+    // * A (From ledger screen --> display All entries)
     public static void displayLedgerAllEntries(){
         System.out.println("All Entries Are Being Displayed: ");
         for (int i = 0; i < transactions.size(); i++){
@@ -234,7 +233,7 @@ public class AccountingLedgerApp {
         }
     }
 
-    // * D (From ledger screen --> Verify which user, then display only positive or "Deposit" entries)
+    // * D (From ledger screen --> display only positive or "Deposit" entries)
     public static void displayLedgerDeposits(){
         System.out.println("Ledger Deposits Are Being Displayed: ");
         // todo how to reverse it by date
@@ -251,7 +250,7 @@ public class AccountingLedgerApp {
         }
     }
 
-    // * P (From ledger screen --> Verify which user, then display only negative or "Payment" entries)
+    // * P (From ledger screen --> display only negative or "Payment" entries)
     public static void displayLedgerPayments(){
         System.out.println("Ledger Payments Are Being Displayed: ");
         for (int i = 0; i < transactions.size(); i++){
@@ -313,7 +312,7 @@ public class AccountingLedgerApp {
                         displaySearchByVendor();
                         break;
                     case 0:
-                        displayLedgerMenu();
+                        return;
                     default:
                         System.out.println("Invalid Number, please try again.");
 
@@ -324,7 +323,7 @@ public class AccountingLedgerApp {
         } while(true);
     }
 
-    // * 1 (Month to Date)
+    // * 1 (From reports screen --> Display reports for Current Month to Current Date)
     public static void displayMonthToDate(){
         System.out.println("Displaying Beginning of Current Month to Current Date: ");
 
@@ -336,7 +335,7 @@ public class AccountingLedgerApp {
         }
     }
 
-    // * 2 (Previous Month)
+    // * 2 (From reports screen --> Display reports for Previous Month)
     public static void displayPreviousMonth(){
         System.out.println("Displaying Previous Month: ");
 
@@ -349,7 +348,7 @@ public class AccountingLedgerApp {
 
     }
 
-    // * 3 (Year to Date)
+    // * 3 (From reports screen --> Display reports for Current Year to Current Date)
     public static void displayYearToDate(){
         System.out.println("Displaying Beginning of Current Year to Current Date: ");
 
@@ -361,7 +360,7 @@ public class AccountingLedgerApp {
         }
     }
 
-    // * 4 (Previous Year)
+    // * 4 (From reports screen --> Display reports for Previous Year)
     public static void displayPreviousYear(){
         System.out.println("Displaying Previous Year: ");
 
@@ -373,7 +372,7 @@ public class AccountingLedgerApp {
         }
     }
 
-    // * 5 (Search by Vendor)
+    // * 5 (From reports screen --> Display reports that are Searched by Vendor)
     public static void displaySearchByVendor(){
         String vendor = Console.PromptForString("Search By Vendor: ");
 
