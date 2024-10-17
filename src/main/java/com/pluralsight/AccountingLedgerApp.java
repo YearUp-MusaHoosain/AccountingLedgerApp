@@ -78,7 +78,6 @@ public class AccountingLedgerApp {
     }
 
 
-
     /**
      * home screen (top level) menu. user can select a few options:
      * D (Add Deposit), P (Make Payment), L (Ledger), X (Exit)
