@@ -6,19 +6,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class AccountingLedgerApp {
 
     public final static String dataFileName = "transactions.csv";
-    public static ArrayList<Transactions> transactions = getTransactions();
+    public static ArrayList<Transaction> transactions = getTransactions();
 
 
     public static void main(String[] args) {
@@ -28,8 +24,8 @@ public class AccountingLedgerApp {
     }
 
     // This Method gets all the transactions from the transactions.csv
-    public static ArrayList<Transactions> getTransactions(){
-        ArrayList<Transactions> transactions = new ArrayList<Transactions>();
+    public static ArrayList<Transaction> getTransactions(){
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         try{
             FileReader fr = new FileReader(dataFileName);
             BufferedReader br = new BufferedReader(fr);
@@ -45,7 +41,7 @@ public class AccountingLedgerApp {
                 String transactionDescription = tokens[2];
                 String transactionVendor = tokens[3];
                 double transactionAmount = Double.parseDouble(tokens[4]);
-                Transactions t = new Transactions(transactionDate, transactionTime, transactionDescription, transactionVendor, transactionAmount);
+                Transaction t = new Transaction(transactionDate, transactionTime, transactionDescription, transactionVendor, transactionAmount);
                 transactions.add(t);
             }
             br.close();
@@ -67,7 +63,7 @@ public class AccountingLedgerApp {
 
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-            for(Transactions t : transactions){
+            for(Transaction t : transactions){
                 String formattedTime = t.getTime().format(timeFormatter);
                 String data = t.getDate() + "|" + formattedTime + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount() + "\n";
                 fw.write(data);
@@ -90,31 +86,31 @@ public class AccountingLedgerApp {
         do {
             try{
                 System.out.println();
-                System.out.println("--".repeat(30));
-                System.out.println("WELCOME TO ACCOUNTING LEDGER APPLICATION!");
+                System.out.println("--".repeat(55));
+                System.out.println("===== WELCOME TO ACCOUNTING LEDGER APPLICATION! =====");
                 System.out.println("Please select from the following:");
                 System.out.println("   D - Add Deposit");
                 System.out.println("   P - Make Payment (Debit)");
                 System.out.println("   L - Check Ledger");
                 System.out.println("   E - Exit");
-                System.out.print("Command: ");
+                System.out.print("(Home Screen) Choose a Command: ");
 
                 String option = Console.PromptForString();
 
                 switch(option){
-                    case "D":
+                    case "D": // D or d (Add Deposit)
                     case "d":
                         addDeposit();
                         break;
-                    case "P":
+                    case "P": // P or p (Make Payment)
                     case "p":
                         makePayment();
                         break;
-                    case "L":
+                    case "L": // L or l (Ledger)
                     case "l":
                         displayLedgerMenu();
                         break;
-                    case "E":
+                    case "E": // X or x (Exit)
                     case "e":
                         return;
                     default:
@@ -135,17 +131,29 @@ public class AccountingLedgerApp {
      * (prompt the user for deposit information and save it to transactions.csv)
      */
     public static void addDeposit(){
+        //add deposit requires:  description, vendor, amount, date, time
+
+        //description
         String depositDescription = Console.PromptForString("Enter description of the deposit: ");
+        //vendor
         String depositVendor = Console.PromptForString("Enter the name of the vendor: ");
+        //deposit amount
         double depositAmount = Console.PromptForDouble("Enter the amount you want to deposit:  ");
+        //date + time
         LocalDate depositDate = LocalDate.now();
         LocalTime depositTime = LocalTime.now();
 
-
-        Transactions t = new Transactions(depositDate, depositTime,
+        System.out.println(Transaction.toHeaderString());
+        //make a new transaction instance
+        Transaction t = new Transaction(depositDate, depositTime,
                 depositDescription, depositVendor, depositAmount);
+        //add it to transactions
         transactions.add(t);
+        //write it to the existing transactions.csv file
         writeTransactions();
+        //print out t, to let the user know the deposit occurred
+        System.out.println(t.toString());
+        System.out.println("\n Deposit Successfully Completed!");
 
     }
 
@@ -156,18 +164,32 @@ public class AccountingLedgerApp {
      * (prompt the user for debit information and save it to transactions.csv)
      */
     public static void makePayment(){
+        //add payment requires:  description, vendor, amount, date, time
+
+        //description
         String paymentDescription = Console.PromptForString("Enter description of the payment: ");
+        //vendor
         String paymentVendor = Console.PromptForString("Enter the name of the vendor: ");
+        //payment amount
         double paymentAmount = Console.PromptForDouble("Enter the amount you want to pay:  ");
+        //date + time
         LocalDate paymentDate = LocalDate.now();
         LocalTime paymentTime = LocalTime.now();
 
+        //make paymentAmount equal to negative values
         paymentAmount = paymentAmount * -1;
 
-        Transactions t = new Transactions(paymentDate, paymentTime,
+        System.out.println(Transaction.toHeaderString());
+        //make a new transaction instance
+        Transaction t = new Transaction(paymentDate, paymentTime,
                 paymentDescription, paymentVendor, paymentAmount);
+        //add it to transactions
         transactions.add(t);
+        //write it to the existing transactions.csv file
         writeTransactions();
+        //print out t, to let the user know the deposit occurred
+        System.out.println(t.toString());
+        System.out.println("\n Payment Successfully Completed!");
     }
 
 
@@ -183,36 +205,36 @@ public class AccountingLedgerApp {
         do {
             try{
                 System.out.println();
-                System.out.println("--".repeat(30));
-                System.out.println("LEDGER SCREEN");
+                System.out.println("--".repeat(55));
+                System.out.println("===== LEDGER SCREEN =====");
                 System.out.println("Please select from the following:");
                 System.out.println("   A - Display All Entries");
                 System.out.println("   D - Display Deposit Entries");
                 System.out.println("   P - Display Payment Entries");
                 System.out.println("   R - Check Reports");
                 System.out.println("   H - Return to Home Menu");
-                System.out.print("Command: ");
+                System.out.print("(Ledger Screen) Choose a Command: ");
 
                 String option = Console.PromptForString();
 
                 switch(option){
-                    case "A":
+                    case "A": // A or a (From ledger screen --> display All entries)
                     case "a":
                         displayLedgerAllEntries();
                         break;
-                    case "D":
+                    case "D": // D or d (From ledger screen --> display only positive or "Deposit" entries)
                     case "d":
                         displayLedgerDeposits();
                         break;
-                    case "P":
+                    case "P": // P or p (From ledger screen --> display only negative or "Payment" entries)
                     case "p":
                         displayLedgerPayments();
                         break;
-                    case "R":
+                    case "R": // R or r (From ledger screen --> third level menu - the "reports" screen. Users can run predefined reports or custom vendor search)
                     case "r":
                         displayReportsMenu();
                         break;
-                    case "H":
+                    case "H": // H or h (From ledger screen --> return to Home screen)
                     case "h":
                        return;
                     default:
@@ -228,44 +250,49 @@ public class AccountingLedgerApp {
     // * A (From ledger screen --> display All entries)
     public static void displayLedgerAllEntries(){
         System.out.println("All Entries Are Being Displayed: ");
+        System.out.println(Transaction.toHeaderString());
+
+        Comparator<Transaction> comparator = Comparator.comparing(Transaction::getDate).reversed();
+        transactions.sort(comparator);
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++){
-        // todo how to reverse it by date
-      //for (int i = transactions.size() -1 ; i >= 0; i--){
-        Transactions t = transactions.get(i);
-            Collections.sort();
-        System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+        Transaction t = transactions.get(i);
+        // prints all the transactions
+        System.out.println(t.toString());
         }
     }
 
     // * D (From ledger screen --> display only positive or "Deposit" entries)
     public static void displayLedgerDeposits(){
         System.out.println("Ledger Deposits Are Being Displayed: ");
-        // todo how to reverse it by date
-        //for (int i = transactions.size() -1 ; i >= 0; i--){
+        System.out.println(Transaction.toHeaderString());
+        Comparator<Transaction> comparator = Comparator.comparing(Transaction::getDate).reversed();
+        transactions.sort(comparator);
+
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++){
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the amount is greater than 0, it prints all the "great than zero" transactions
             if (t.getAmount() > 0){
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println((t.toString()));
             }
-//            else if (t.getAmount() == 0){
-//                System.out.println("Deposits of $0 Made!");
-//                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
-//            }
         }
     }
 
     // * P (From ledger screen --> display only negative or "Payment" entries)
     public static void displayLedgerPayments(){
         System.out.println("Ledger Payments Are Being Displayed: ");
+        System.out.println(Transaction.toHeaderString());
+        Comparator<Transaction> comparator = Comparator.comparing(Transaction::getDate).reversed();
+        transactions.sort(comparator);
+
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++){
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the amount is less than 0, it prints all the "less than zero" transactions
             if (t.getAmount() < 0){
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println((t.toString()));
             }
-//            if (t.getAmount() == 0){
-//                System.out.println("Payments of $0 Made!");
-//                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
-//            }
         }
     }
 
@@ -273,21 +300,19 @@ public class AccountingLedgerApp {
     /**
      * R -- From ledger screen --> third level menu - the "reports" screen. User can select from a few options or search by vendor:
      *
-     * 1 (Month to Date)
-     * 2 (Previous Month)
-     * 3 (Year to Date)
-     * 4 (Previous Year)
-     * 5 (Search by Vendor)
-     * 0 (Back to ledger screen)
-     *
-     * H (go back to home screen)
+     * 1 (From reports screen --> Display reports for Current Month to Current Date)
+     * 2 (From reports screen --> Display reports for Previous Month)
+     * 3 (From reports screen --> Display reports for Current Year to Current Date)
+     * 4 (From reports screen --> Display reports for Previous Year)
+     * 5 (From reports screen --> Display reports that are Searched by Vendor)
+     * 0 (From reports screen --> Back to ledger screen)
      */
     public static void displayReportsMenu(){
         do {
             try{
                 System.out.println();
-                System.out.println("--".repeat(30));
-                System.out.println("REPORTS SCREEN");
+                System.out.println("--".repeat(55));
+                System.out.println("===== REPORTS SCREEN =====");
                 System.out.println("Please select from the following:");
                 System.out.println("   1 - Month to Date");
                 System.out.println("   2 - Previous Month");
@@ -295,27 +320,27 @@ public class AccountingLedgerApp {
                 System.out.println("   4 - Previous Year");
                 System.out.println("   5 - Search by Vendor");
                 System.out.println("   0 - Back to Ledger Screen");
-                System.out.print("Command: ");
+                System.out.print("(Reports Screen) Choose a Command: ");
 
                 int option = Console.PromptForInt();
 
                 switch(option){
-                    case 1:
+                    case 1: // 1 (From reports screen --> Display reports for Current Month to Current Date)
                         displayMonthToDate();
                         break;
-                    case 2:
+                    case 2: // 2 (From reports screen --> Display reports for Previous Month)
                         displayPreviousMonth();
                         break;
-                    case 3:
+                    case 3: // 3 (From reports screen --> Display reports for Current Year to Current Date)
                         displayYearToDate();
                         break;
-                    case 4:
+                    case 4: // 4 (From reports screen --> Display reports for Previous Year)
                         displayPreviousYear();
                         break;
-                    case 5:
+                    case 5: // 5 (From reports screen --> Display reports that are Searched by Vendor)
                         displaySearchByVendor();
                         break;
-                    case 0:
+                    case 0: // 0 (From reports screen --> Back to ledger screen)
                         return;
                     default:
                         System.out.println("Invalid Number, please try again.");
@@ -330,11 +355,14 @@ public class AccountingLedgerApp {
     // * 1 (From reports screen --> Display reports for Current Month to Current Date)
     public static void displayMonthToDate(){
         System.out.println("Displaying Beginning of Current Month to Current Date: ");
+        System.out.println(Transaction.toHeaderString());
 
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++) {
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the transaction month and year are equal to the current month and year, it will return those transactions until current date and time.
             if (t.getDate().getMonth() == LocalDate.now().getMonth() && t.getDate().getYear() == LocalDate.now().getYear()) {
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println(t.toString());
             }
         }
     }
@@ -342,11 +370,14 @@ public class AccountingLedgerApp {
     // * 2 (From reports screen --> Display reports for Previous Month)
     public static void displayPreviousMonth(){
         System.out.println("Displaying Previous Month: ");
+        System.out.println(Transaction.toHeaderString());
 
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++) {
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the transaction month is equal to the previous month, it will return those transactions until current date and time.
             if (t.getDate().getMonthValue() == LocalDate.now().getMonthValue()-1) {
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println(t.toString());
             }
         }
 
@@ -355,11 +386,14 @@ public class AccountingLedgerApp {
     // * 3 (From reports screen --> Display reports for Current Year to Current Date)
     public static void displayYearToDate(){
         System.out.println("Displaying Beginning of Current Year to Current Date: ");
+        System.out.println(Transaction.toHeaderString());
 
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++) {
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the transaction year is equal to the current year, it will return those transactions until current date and time.
             if (t.getDate().getYear() == LocalDate.now().getYear()) {
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println(t.toString());
             }
         }
     }
@@ -367,11 +401,14 @@ public class AccountingLedgerApp {
     // * 4 (From reports screen --> Display reports for Previous Year)
     public static void displayPreviousYear(){
         System.out.println("Displaying Previous Year: ");
+        System.out.println(Transaction.toHeaderString());
 
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++) {
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the transaction year is equal to the previous year, it will return those transactions until current date and time.
             if (t.getDate().getYear() == LocalDate.now().getYear()-1) {
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println(t.toString());
             }
         }
     }
@@ -379,16 +416,16 @@ public class AccountingLedgerApp {
     // * 5 (From reports screen --> Display reports that are Searched by Vendor)
     public static void displaySearchByVendor(){
         String vendor = Console.PromptForString("Search By Vendor: ");
+        System.out.println(Transaction.toHeaderString());
 
+        // loops through the length of transactions and returns all of them
         for (int i = 0; i < transactions.size(); i++) {
-            Transactions t = transactions.get(i);
+            Transaction t = transactions.get(i);
+            // if the transaction vendor is equal vendor from user's input, it will return all transactions from that vendor.
             if (t.getVendor().equalsIgnoreCase(vendor)) {
-                System.out.println(t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount());
+                System.out.println(t.toString());
             }
         }
     }
-
-
-
 
 }

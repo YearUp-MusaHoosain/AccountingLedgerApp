@@ -9,6 +9,7 @@ target/
 .idea/compiler.xml
 .idea/libraries/
 .idea/intellij-javadocs-4.0.1.xml
+*.idea
 *.iws
 *.iml
 *.ipr
