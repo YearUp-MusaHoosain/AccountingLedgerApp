@@ -87,13 +87,17 @@ public class AccountingLedgerApp {
             try{
                 System.out.println();
                 System.out.println("--".repeat(55));
-                System.out.println("===== WELCOME TO ACCOUNTING LEDGER APPLICATION! =====");
-                System.out.println("Please select from the following:");
-                System.out.println("   D - Add Deposit");
-                System.out.println("   P - Make Payment (Debit)");
-                System.out.println("   L - Check Ledger");
-                System.out.println("   E - Exit");
-                System.out.print("(Home Screen) Choose a Command: ");
+                System.out.println("++++++++ WELCOME TO ACCOUNTING LEDGER APPLICATION! ++++++++");
+                System.out.println("++++++++++++ Please select from the following: ++++++++++++");
+                System.out.println("+++                                                     +++");
+                System.out.println("+++   D - Add Deposit                                   +++");
+                System.out.println("+++   P - Make Payment (Debit)                          +++");
+                System.out.println("+++   L - Check Ledger                                  +++");
+                System.out.println("+++   E - Exit                                          +++");
+                System.out.println("+++                                                     +++");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println();
+                System.out.print("+++ (Home Screen) Choose a Command: ");
 
                 String option = Console.PromptForString();
 
@@ -206,14 +210,18 @@ public class AccountingLedgerApp {
             try{
                 System.out.println();
                 System.out.println("--".repeat(55));
-                System.out.println("===== LEDGER SCREEN =====");
-                System.out.println("Please select from the following:");
-                System.out.println("   A - Display All Entries");
-                System.out.println("   D - Display Deposit Entries");
-                System.out.println("   P - Display Payment Entries");
-                System.out.println("   R - Check Reports");
-                System.out.println("   H - Return to Home Menu");
-                System.out.print("(Ledger Screen) Choose a Command: ");
+                System.out.println("++++++++++++++++++++++ LEDGER SCREEN ++++++++++++++++++++++");
+                System.out.println("++++++++++++ Please select from the following: ++++++++++++");
+                System.out.println("+++                                                     +++");
+                System.out.println("+++   A - Display All Entries                           +++");
+                System.out.println("+++   D - Display Deposit Entries                       +++");
+                System.out.println("+++   P - Display Payment Entries                       +++");
+                System.out.println("+++   R - Check Reports                                 +++");
+                System.out.println("+++   H - Return to Home Menu                           +++");
+                System.out.println("+++                                                     +++");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println();
+                System.out.print("+++ (Ledger Screen) Choose a Command: ");
 
                 String option = Console.PromptForString();
 
@@ -313,15 +321,19 @@ public class AccountingLedgerApp {
             try{
                 System.out.println();
                 System.out.println("--".repeat(55));
-                System.out.println("===== REPORTS SCREEN =====");
-                System.out.println("Please select from the following:");
-                System.out.println("   1 - Month to Date");
-                System.out.println("   2 - Previous Month");
-                System.out.println("   3 - Year to Date");
-                System.out.println("   4 - Previous Year");
-                System.out.println("   5 - Search by Vendor");
-                System.out.println("   0 - Back to Ledger Screen");
-                System.out.print("(Reports Screen) Choose a Command: ");
+                System.out.println("+++++++++++++++++++++ REPORTS SCREEN ++++++++++++++++++++++");
+                System.out.println("+++++++++++++Please select from the following:+++++++++++++");
+                System.out.println("+++                                                     +++");
+                System.out.println("+++   1 - Month to Date                                 +++");
+                System.out.println("+++   2 - Previous Month                                +++");
+                System.out.println("+++   3 - Year to Date                                  +++");
+                System.out.println("+++   4 - Previous Year                                 +++");
+                System.out.println("+++   5 - Search by Vendor                              +++");
+                System.out.println("+++   0 - Back to Ledger Screen                         +++");
+                System.out.println("+++                                                     +++");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println();
+                System.out.print("+++ (Reports Screen) Choose a Command: ");
 
                 int option = Console.PromptForInt();
 
