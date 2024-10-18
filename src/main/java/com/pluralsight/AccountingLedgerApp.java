@@ -158,7 +158,7 @@ public class AccountingLedgerApp {
         writeTransactions();
         //print out t, to let the user know the deposit occurred
         System.out.println(t.toString());
-        System.out.println("\n Deposit Successfully Completed!");
+        System.out.println("\n +++++ Deposit Successfully Completed! +++++");
 
     }
 
@@ -194,7 +194,7 @@ public class AccountingLedgerApp {
         writeTransactions();
         //print out t, to let the user know the deposit occurred
         System.out.println(t.toString());
-        System.out.println("\n Payment Successfully Completed!");
+        System.out.println("\n +++++ Payment Successfully Completed! +++++");
     }
 
 
