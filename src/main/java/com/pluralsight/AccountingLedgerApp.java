@@ -116,6 +116,7 @@ public class AccountingLedgerApp {
                         break;
                     case "E": // X or x (Exit)
                     case "e":
+                        System.out.println("Exiting Application. Thank you for using this application!");
                         return;
                     default:
                         System.out.println("Invalid Letter, please try again.");
