@@ -279,6 +279,7 @@ public class AccountingLedgerApp {
         }
     }
 
+
     // * P (From ledger screen --> display only negative or "Payment" entries)
     public static void displayLedgerPayments(){
         System.out.println("Ledger Payments Are Being Displayed: ");

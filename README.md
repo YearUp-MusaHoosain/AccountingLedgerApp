@@ -25,12 +25,16 @@ The application allows users to record and review financial transactions, stored
 ## Menu
 
 | Home Screen Menu | Ledger Menu | Reports Menu |
-|:-----:| :---: | :---: |
-| D - Add Deposit | A - View All Entries | 1 - Display This Month's Transactions |
+|:---:| :---: | :---: |
+| D - Add Deposit  | A - View All Entries | 1 - Display This Month's Transactions |
 | P - Make Payment | D - View Deposits | 2 - Display Last Month's Transactions |
-| L - Ledger | P - View Payments | 3 - Display This Year's Transactions |
-| E - Exit | R - Check Reports | 4 - Display Last Year's Transactions |
-| | | 5 - Search Transactions By Vendor |
+|    L - Ledger    | P - View Payments | 3 - Display This Year's Transactions |
+|     E - Exit     | R - Check Reports | 4 - Display Last Year's Transactions |
+|                  | | 5 - Search Transactions By Vendor |
+
+Here is a flowchart of the application:
+
+![FlowchartOfAccountingLedgerApplication](images/FlowchartOfAccountingLedgerApplication.png)
 
 ## Screenshots
 
